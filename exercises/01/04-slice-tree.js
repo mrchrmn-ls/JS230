@@ -23,25 +23,17 @@ function walkUp(node, callback) {
   }
 }
 
-function isDescendantOf(potentialChild, parent) {
-  let descendant = false;
-  walkUp(potentialChild, node => {
-    if (node.parentElement === parent) descendant = true;
-  });
-  return descendant;
-}
-
 function sliceTree (startId, endId) {
   let startNode = document.getElementById(startId);
   let endNode = document.getElementById(endId);
 
   if (!startNode || !endNode) return undefined;
-  if (!isDescendantOf(endNode, startNode) ||
-      !isDescendantOf(startNode, document.body)) return undefined;
+  if (!startNode.contains(endNode) ||
+      !document.body.contains(startNode)) return undefined;
 
   let result = [];
   walkUp(endNode, node => {
-    result.unshift(node.nodeName);
+    if (!node.contains(startNode.parentElement)) result.unshift(node.nodeName);
   });
   return result;
 }
