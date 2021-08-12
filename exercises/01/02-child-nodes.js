@@ -6,7 +6,7 @@ function walk(node, callback) {
 }
 
 function childNodes(id) {
-  let parent = document.getElementById(String(id));
+  let parent = document.getElementById(id);
   let children = 0;
 
   walk(parent, node => {
