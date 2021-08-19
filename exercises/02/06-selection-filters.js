@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 const CLASSES = {
   "Vertebrate": ["Bear", "Turtle", "Whale", "Salmon", "Ostrich"],
   "Warm-blooded": ["Bear", "Whale", "Ostrich"],
@@ -19,7 +20,6 @@ function clearOptions(select) {
 }
 
 function optionsFromArray(select, array) {
-  clearOptions(select);
   array.forEach(item => {
     select.add(new Option(item, item));
   });
@@ -28,16 +28,29 @@ function optionsFromArray(select, array) {
 document.addEventListener("DOMContentLoaded", () => {
   let classesMenu = document.querySelector("#animal-classifications");
   let animalsMenu = document.querySelector("#animals");
+  let clear = document.querySelector("#clear");
 
   classesMenu.addEventListener("change", event => {
-    let selection = classesMenu.options[classesMenu.selectedIndex].value;
-    let animals = CLASSES[selection];
-    optionsFromArray(animalsMenu, animals);
+    let selection = event.target.value;
+    clearOptions(event.currentTarget);
+    optionsFromArray(animalsMenu, CLASSES[selection]);
   });
 
   animalsMenu.addEventListener("change", event => {
-    let selection = animalsMenu.options[animalsMenu.selectedIndex].value;
-    let classes = ANIMALS[selection];
-    optionsFromArray(classesMenu, classes);
+    let selection = event.target.value;
+    clearOptions(event.currentTarget);
+    optionsFromArray(classesMenu, ANIMALS[selection]);
+  });
+
+  clear.addEventListener("click", event => {
+    event.preventDefault();
+
+    clearOptions(classesMenu);
+    optionsFromArray(classesMenu, Object.keys(CLASSES));
+    classesMenu.add(new Option("Classifications", "Classifications"));
+
+    clearOptions(animalsMenu);
+    optionsFromArray(animalsMenu, Object.keys(ANIMALS));
+    animalsMenu.add(new Option("Animals", "Animals"));
   });
 });
