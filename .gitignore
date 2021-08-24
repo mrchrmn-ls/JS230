@@ -1,0 +1,7 @@
+# ignore node_modules
+/03-XHR/*/package-lock.json
+/03-XHR/*/node_modules
+/03-XHR/areas_of_continents_node
+/03-XHR/request-origin
+exercises/05/*/package-json.lock
+exercises/05/*/*/
