@@ -5,3 +5,6 @@
 /03-XHR/request-origin
 exercises/05/*/package-json.lock
 exercises/05/*/*/
+!exercises/05/*/public/
+exercises/05/*/public/*
+!exercises/05/*/public/*.html
