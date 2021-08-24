@@ -12,14 +12,14 @@ const Autocomplete = {
 
   wrapInput() {
     let wrapper = document.createElement("div");
-    wrapper.classList.add("autocomlete-wrapper");
+    wrapper.classList.add("autocomplete-wrapper");
     this.input.parentNode.appendChild(wrapper);
     wrapper.appendChild(this.input);
   },
 
   createUI() {
     let listUI = document.createElement("ul");
-    listUI.classList.add("autocomlete-ui");
+    listUI.classList.add("autocomplete-ui");
     this.input.parentNode.appendChild(listUI);
     this.listUI = listUI;
 
