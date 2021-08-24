@@ -1,0 +1,7 @@
+# ignore node_modules
+package-lock.json
+/*/node_modules
+/*/package-lock.json
+/.vscode
+/areas_of_continents_node
+/request-origin
