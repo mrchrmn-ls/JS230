@@ -1,0 +1,39 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+</body>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    let request = new XMLHttpRequest();
+
+    request.open("GET", "/api/schedules");
+    request.responseType = "json";
+    request.addEventListener("load", () => {
+      console.log("\n== request.response ==\n", request.response, "\n");
+      handleSchedules(request.response);
+    });
+  
+    request.send();
+  });
+
+  function handleSchedules(schedules) {
+    let available = {};
+
+    if (schedules.length === 0) {
+      console.log("There are currently no schedules for booking")
+    }
+
+    schedules.forEach(schedule => {
+      available["Staff " + schedule.staff_id] = available["Staff " + schedule.staff_id] || 0;
+      available["Staff " + schedule.staff_id] += 1;
+    });
+
+    console.log("\n== available ==\n", available, "\n");
+  }
+</script>
+</html>
