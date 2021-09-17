@@ -13,10 +13,18 @@
 
     request.open("GET", "/api/schedules");
     request.responseType = "json";
-    request.addEventListener("load", () => {
-      console.log("\n== request.response ==\n", request.response, "\n");
+    request.timeout = 5000;
+    request.onload = () => {
       handleSchedules(request.response);
-    });
+    };
+
+    request.ontimeout = () => {
+      console.log("The data could not be retrieved. Please try again later");
+    };
+    
+    request.onloadend = () => {
+      console.log("Request completed.")
+    }
   
     request.send();
   });

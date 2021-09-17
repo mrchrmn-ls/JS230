@@ -1,0 +1,45 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <form>
+    <fieldset>
+      <label for="email">Email: </label>
+      <input type="text" name="email">
+      <label for="name">Name:</label>
+      <input type="text" name="name">
+      <button type="submit">Submit</button>
+    </fieldset>
+  </form>
+</body>
+<script>
+  function handleSubmission(data) {
+    let req = new XMLHttpRequest();
+
+    req.open("POST", "/api/staff_members");
+    req.onloadend = () => {
+      if (req.status === 400) {
+        alert(req.response);
+      }
+      if (req.status === 201) {
+        alert(`New staff member successfully added with id ${JSON.parse(req.response).id}.`);
+      }
+    }
+    req.send(data);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    let form = document.querySelector("form");
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      let data = new FormData(form);
+      handleSubmission(data);
+    })
+  });
+</script>
+</html>

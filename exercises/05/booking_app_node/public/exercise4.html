@@ -1,0 +1,116 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button id="addSchedule">Add more schedules</button>
+  <form>
+    <fieldset name="Schedule 1">
+      <legend>Schedule 1</legend>
+      <dl>
+        <dt>
+          <label for="staff_id">Staff Name:</label>
+        </dt>
+        <dd>
+          <select name="staff_id">
+          </select>
+        </dd>
+        <dt>
+          <label for="date">Date:</label>
+        </dt>
+        <dd>
+          <input type="date" name="date">
+        </dd>
+        <dt>
+          <label for="time">Time:</label>
+        </dt>
+        <dd>
+          <input type="time" name="time">
+        </dd>
+      </dl>
+    </fieldset>
+    <input type="submit" id="submit">
+  </form>
+</body>
+<script>
+  function createOption(id, name) {
+    let option = document.createElement("option");
+    option.setAttribute("value", id);
+    option.innerText = name;
+    return option;
+  }
+
+
+  function createStaffSelection(fieldset) {
+    let select = fieldset.querySelector("select");
+    let xhr = new XMLHttpRequest();
+
+    xhr.open("GET", "/api/staff_members");
+    xhr.onload = () => {
+      let staff = JSON.parse(xhr.response);
+      staff.forEach(entry => {
+        let option = createOption(entry.id, entry.name);
+        select.append(option);
+      });
+    }
+    xhr.send();
+  }
+
+
+  function handleSubmission(form) {
+    function parseDate(dateString) {
+      let parts = dateString.split("-");
+      return new Array(parts[1], parts[2], parts[0].slice(-2)).join("-");
+    }
+
+    let schedules = { schedules: [] }
+    let fieldsets = form.querySelectorAll("fieldset");
+
+    [...fieldsets].forEach(set => {
+      let staff_id = set.querySelector("select").value;
+      let date = parseDate(set.querySelector("input[type='date']").value);
+      let time = set.querySelector("input[type='time']").value;
+      schedules.schedules.push({ staff_id, date, time });
+    });
+
+    console.log(schedules);
+
+    let json = JSON.stringify(schedules);
+
+    let req = new XMLHttpRequest();
+    req.open("POST", "/api/schedules");
+    req.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+    req.onloadend = () => {
+      alert(req.response);
+    }
+    req.send(json);
+  }
+
+
+  document.addEventListener("DOMContentLoaded", () => {
+    let initialFieldSet = document.querySelector("fieldset");
+    createStaffSelection(initialFieldSet);
+
+    let addScheduleButton = document.getElementById("addSchedule");
+    let submit = document.getElementById("submit");
+
+    addScheduleButton.addEventListener("click", () => {
+      scheduleCount += 1;
+
+      let fieldset = initialFieldSet.cloneNode(true);
+      fieldset.querySelector("legend").innerText = "Schedule " + scheduleCount;
+
+      submit.before(fieldset);
+    });
+
+    let form = document.querySelector("form");
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      handleSubmission(form);
+    });
+  });
+</script>
+</html>
