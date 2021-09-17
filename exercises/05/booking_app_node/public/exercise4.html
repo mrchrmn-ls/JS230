@@ -76,17 +76,15 @@
       schedules.schedules.push({ staff_id, date, time });
     });
 
-    console.log(schedules);
-
     let json = JSON.stringify(schedules);
 
-    let req = new XMLHttpRequest();
-    req.open("POST", "/api/schedules");
-    req.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-    req.onloadend = () => {
-      alert(req.response);
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/schedules");
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+    xhr.onloadend = () => {
+      alert(xhr.response);
     }
-    req.send(json);
+    xhr.send(json);
   }
 
 
