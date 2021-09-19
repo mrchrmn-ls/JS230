@@ -61,7 +61,7 @@
     function createOption(schedule, staff) {
       let option = document.createElement("option");
       option.setAttribute("value", schedule.id);
-      option.innerText = staff.find(member => member.id === schedule.id).name + " | "
+      option.innerText = staff.find(member => member.id === schedule.staff_id).name + " | "
                        + schedule.date + " | " + schedule.time;
       return option;
     }
