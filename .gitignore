@@ -7,4 +7,4 @@ exercises/05/*/package-json.lock
 exercises/05/*/*/
 !exercises/05/*/public/
 exercises/05/*/public/*
-!exercises/05/*/public/*.html
+!exercises/05/*/public/exercise*
