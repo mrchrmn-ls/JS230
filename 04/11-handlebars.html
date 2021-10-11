@@ -1,0 +1,57 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.js"></script>
+</head>
+<body>
+  <script id="post-tag" type="text/x-handlebars">
+    <p>
+      <strong>{{this}}</strong>
+    </p>
+  </script>
+  <script id="post" type="text/x-handlebars">
+    {{#each posts}}
+    <article>
+      <h1>{{title}}</h1>
+      <p><time>Posted on {{published}}</time></p>
+      <p>Tags:</p>
+      {{#if tags}}
+        {{#each tags}}
+          {{> postTagTemplate}}
+        {{/each}}
+      {{else}}
+        <p>Not tagged</p>
+      {{/if}}
+      {{{body}}}
+    </article>
+    {{/each}}
+  </script>
+</body>
+<script>
+  let post1 = {
+    title: 'Lorem ipsum dolor sit amet',
+    published: 'April 1, 2015',
+    body: 'Sed ut <strong>perspiciatis</strong> unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.',
+    tags: ["opinion", "germany", "sports"]
+  };
+
+  let post2 = {
+    title: 'ipsum dolor sit amet',
+    published: 'April 4, 2020',
+    body: 'Sed ut <strong>perspiciatis</strong> unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.',
+    tags: []
+  };
+
+  let posts = [post1, post2];
+
+  let postTemplate = Handlebars.compile(document.getElementById("post").innerHTML);
+  let postTagTemplate = Handlebars.compile(document.getElementById("post-tag").innerHTML);
+
+  Handlebars.registerPartial("postTagTemplate", document.getElementById("post-tag").innerHTML);
+
+  document.body.innerHTML = postTemplate({posts: posts});
+</script>
+</html>
