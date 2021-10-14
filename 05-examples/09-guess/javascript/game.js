@@ -1,26 +1,31 @@
 document.addEventListener("DOMContentLoaded", () => {
-  class Display {
+
+  class UI {
     static MESSAGE = document.getElementById("message");
     static REPLAY = document.getElementById("replay");
     static SPACES = document.getElementById("spaces");
     static GUESSES = document.getElementById("guesses");
     static APPLES = document.getElementById("apples");
- 
+
+    static reset() {
+      UI.renderApples(0);
+      UI.renderMessage("");
+      UI.renderGuesses([]);
+      UI.renderSpaces([]);
+      UI.toggleReplay();
+    }
 
     static renderMessage(text) {
-      Display.MESSAGE.textContent = text;
+      UI.MESSAGE.textContent = text;
     }
     
-
     static renderSpaces(letters) {
-      Display.renderLetters(letters, Display.SPACES);
+      UI.renderLetters(letters, UI.SPACES);
     }
-
 
     static renderGuesses(letters) {
-      Display.renderLetters(letters, Display.GUESSES);
+      UI.renderLetters(letters, UI.GUESSES);
     }
-
 
     static renderLetters(letters, element) {
       [...element.querySelectorAll("span")].forEach(span => span.remove());
@@ -30,82 +35,94 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-
     static renderApples(wrongGuesses) {
-      Display.APPLES.className = `guess_${wrongGuesses}`;
+      UI.APPLES.className = `guess_${wrongGuesses}`;
+    }
+
+
+    static toggleReplay() {
+      UI.REPLAY.classList.toggle("hidden");
     }
 
     // "this" refers to game instance
-    static handleKeydown(event) {
+    static keydown(event) {
       if (!(event.key.length === 1) || !(event.key.match(/[a-zA-Z]/))) return null;
-      if (this.incorrect < Game.MAX_WRONG) this.updateGame(event.key); 
+      if (this.incorrect < Game.MAX_WRONG) this.updateLetters(event.key); 
     }
 
+    static replayClick(event) {
+      event.preventDefault();
+      keydownListener = UI.keydown.bind(new Game(randomWord()));
+      document.addEventListener("keydown", keydownListener);
+    }
   }
   
 
   class Game {
     static MAX_WRONG = 6;
   
-
     constructor(word) {
+      this.incorrect = 0;
+      this.guessedLetters = [];
+      UI.reset();
+
       if (word) { 
         this.word = word.split("");
         this.solution = new Array(word.length).fill(" ");
-        this.incorrect = 0;
-        this.guessedLetters = [];
+        UI.renderSpaces(this.solution);
       } else {
-        this.outOfWords();
+        setTimeout(this.outOfWords, 1);        
       }
-
-      Display.renderSpaces(this.solution);
     }
   
+    updateLetters(letter) {
+      if (!(this.guessedLetters.includes(letter))) {
+        this.guessedLetters.push(letter);
+        UI.renderGuesses(this.guessedLetters);
 
-    outOfWords() {
-      Display.renderMessage("We've run out of words to guess.")
-    }
-
-
-    updateGame(letter) {
-      if (!(this.guessedLetters.includes(letter))) this.guessedLetters.push(letter);
-      Display.renderGuesses(this.guessedLetters);
-
-      if (this.word.includes(letter)) {
-        this.updateSolution(letter);
-      } else {
-        this.incorrect += 1;
-        Display.renderApples(this.incorrect);
+        if (this.word.includes(letter)) {
+          this.updateSolution(letter);
+        } else {
+          this.incorrect += 1;
+          UI.renderApples(this.incorrect);
+        }
       }
 
       this.checkGameEnd();
     }
-
 
     updateSolution(key) {
       this.word.forEach((letter, index) => {
         if (letter === key) this.solution[index] = key;
       });
 
-      Display.renderSpaces(this.solution);
+      UI.renderSpaces(this.solution);
     }
-
 
     checkGameEnd() {
       if (!(this.solution.includes(" ")) && this.incorrect < Game.MAX_WRONG) {
-        Display.renderMessage("You win!");
-      
-      } else if (this.incorrect > Game.MAX_WRONG) {
-        Display.renderMessage("Out of guesses!");
+        UI.renderMessage("You win!");
+        this.endGame();
+      } else if (this.incorrect === Game.MAX_WRONG) {
+        UI.renderMessage("Out of guesses!");
+        this.endGame();
       }
     }
 
+    endGame() {
+      this.unbindKeydown();
+      UI.toggleReplay();
+    }
 
-    newGame() {
+    outOfWords() {
+      this.unbindKeydown();
+      UI.renderMessage("We've run out of words to guess.")
+    }
 
+    unbindKeydown() {
+      document.removeEventListener("keydown", keydownListener);
     }
   }
-
 
   let randomWord = (function() {
     let words = ['apple', 'banana', 'orange', 'pear'];
@@ -116,10 +133,8 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   })();
   
-  let game = new Game(randomWord());
+  let keydownListener = UI.keydown.bind(new Game(randomWord()));
 
-  document.addEventListener("keydown", Display.handleKeydown.bind(game));
-
-  // document.getElementById("replay").addEventListener("click", game.handleReplayClick.bind(game));
-  
+  document.addEventListener("keydown", keydownListener);
+  document.getElementById("replay").addEventListener("click", UI.replayClick);
 });
