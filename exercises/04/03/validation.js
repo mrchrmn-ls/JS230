@@ -143,9 +143,16 @@ document.addEventListener("DOMContentLoaded", () => {
         event.preventDefault();
       }
     }
+
+    static ccAutotab(event) {
+      let input = event.target;
+      if (input.value.length === 4) {
+        input.nextElementSibling.focus();
+      }
+    }
   }
 
-  
+
   let form = document.querySelector("form");
 
   form.addEventListener("focusin", Handle.focusin);
@@ -162,7 +169,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let ccInputs = document.querySelectorAll("input[name='creditCardNumber']");
 
-  [...ccInputs].forEach(input => {
+  [...ccInputs].forEach((input, index) => {
     input.addEventListener("keydown", Handle.keydownNumbers);
+    if (index < 3) {
+      input.addEventListener("keyup", Handle.ccAutotab);
+    }
   });
 });
