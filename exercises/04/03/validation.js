@@ -73,6 +73,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     static fields(inputs) {
+      let allValid = true;
+
       inputs.forEach(input => {
         let valid = true;
         let messageType;
@@ -91,12 +93,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (!valid) {
+          allValid = false;
           Display.showErrorMessage(input, messageType);
           Display.highlightInput(input);
         }
-
-        return valid;
       });
+
+      return allValid;
     }
   }
 
