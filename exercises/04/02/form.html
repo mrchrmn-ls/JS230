@@ -20,6 +20,7 @@
       <dd>
         <input type="text" 
                name="firstName"
+               pattern="[a-zA-Z'\s]+"
                required>
         <span class="error_message"></span>
       </dd>
@@ -30,6 +31,7 @@
       <dd>
         <input type="text"
                name="lastName"
+               pattern="[a-zA-Z'\s]+"
                required>
         <span class="error_message"></span>
       </dd>
@@ -65,6 +67,33 @@
                placeholder="123-456-7890"
                pattern="\d{3}-\d{3}-\d{4}"
                name="phone">
+        <span class="error_message"></span>
+      </dd>
+
+      <dt>
+        <label for="creditCardNumber">Credit Card Number</label>
+      </dt>
+      <dd>
+        <input type="text"
+               name="creditCardNumber"
+               maxlength="4"
+               pattern="\d{4}"
+               id="cd1"> - 
+        <input type="text"
+               name="creditCardNumber"
+               maxlength="4"
+               pattern="\d{4}"
+               id="cd2"> - 
+        <input type="text"
+               name="creditCardNumber"
+               maxlength="4"
+               pattern="\d{4}"
+               id="cd3"> - 
+        <input type="text"
+               name="creditCardNumber"
+               maxlength="4"
+               pattern="\d{4}"
+               id="cd4">
         <span class="error_message"></span>
       </dd>
     </dl>
